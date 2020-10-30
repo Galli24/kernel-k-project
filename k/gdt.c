@@ -1,6 +1,19 @@
+#include <stdio.h>
+
 #include "gdt.h"
 
 static gdt_entry_t gdt[6];
+
+void print_entry(size_t index)
+{
+    printf("GDK %u\r\n", index);
+    printf("LIMIT: %x\r\n", gdt[index].limit);
+    printf("BASE_1: %x\r\n", gdt[index].base_1);
+    printf("BASE_2: %x\r\n", gdt[index].base_2);
+    printf("ACCESS: %x\r\n", gdt[index].access);
+    printf("LIMIT_FLAGS: %x\r\n", gdt[index].limit_flags);
+    printf("BASE_3: %x\r\n\r\n", gdt[index].base_3);
+}
 
 void set_entry(size_t index, u32 base, u32 limit, u8 access, u8 flags)
 {
@@ -9,7 +22,7 @@ void set_entry(size_t index, u32 base, u32 limit, u8 access, u8 flags)
     gdt[index].base_3       = (u8)(base >> 24);
     gdt[index].limit        = (u16)limit;
     gdt[index].access       = access;
-    gdt[index].limit_flags  = ((limit >> 12) & 0xF0) | (flags & 0xF);
+    gdt[index].limit_flags  = ((limit >> 16) & 0x0F) | (flags & 0xF0);
 }
 
 void gdt_init()
@@ -18,9 +31,9 @@ void gdt_init()
     set_entry(0, 0, 0, 0, 0);
 
     // Kernel Code
-    set_entry(1, 0, 0xFFFFFFFF, 0x5A, 0xC);
+    set_entry(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
     // Kernel Data
-    set_entry(2, 0, 0xFFFFFFFF, 0x53, 0xC);
+    set_entry(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
     // User Code
     set_entry(3, 0, 0, 0, 0);
@@ -29,6 +42,10 @@ void gdt_init()
 
     // TSS
     set_entry(5, 0, 0, 0, 0);
+
+    size_t i = 0;
+    while (i < 6)
+        print_entry(i++);
 
     gdtr_t gdtr;
     gdtr.base = (u32)gdt;
@@ -42,16 +59,15 @@ void gdt_init()
     asm volatile ("or $1, %al");
     asm volatile ("movl %eax, %cr0");
 
-    /*// Segments
-    asm volatile ("xor %ax, %ax");
+    // Segments
+    asm volatile ("movw $0x10, %ax");
     asm volatile ("movw %ax, %ds");
+    asm volatile ("movw %ax, %es");
     asm volatile ("movw %ax, %fs");
     asm volatile ("movw %ax, %gs");
     asm volatile ("movw %ax, %ss");
 
     // Switch
-    asm volatile ("pushl $0");
-    asm volatile ("pushl $1f");
-    asm volatile ("lret");
-    asm volatile ("1:");*/
+    asm volatile ("ljmp $0x08, $1f");
+    asm volatile ("1:");
 }
