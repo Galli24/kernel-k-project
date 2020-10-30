@@ -6,7 +6,7 @@ static gdt_entry_t gdt[6];
 
 void print_entry(size_t index)
 {
-    printf("GDK %u\r\n", index);
+    printf("GDT ENTRY %u\r\n", index);
     printf("LIMIT: %x\r\n", gdt[index].limit);
     printf("BASE_1: %x\r\n", gdt[index].base_1);
     printf("BASE_2: %x\r\n", gdt[index].base_2);
