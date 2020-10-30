@@ -24,6 +24,7 @@
 #include <k/kstd.h>
 #include <stdio.h>
 
+#include "gdt.h"
 #include "multiboot.h"
 #include "serial.h"
 
@@ -38,6 +39,9 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
 	serial_init();
 	printf("Serial initialized\r\n");
+
+	gdt_init();
+	printf("GDT initialized\r\n");
 
 	for (unsigned i = 0; ; ) {
 		*fb = star[i++ % 4];

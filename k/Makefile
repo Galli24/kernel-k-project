@@ -26,6 +26,7 @@ include ../config.mk
 TARGET	= k
 OBJS	= \
 	  crt0.o \
+	  gdt.o \
 	  k.o \
 	  libvga.o \
 	  list.o \
