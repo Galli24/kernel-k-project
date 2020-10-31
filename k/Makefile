@@ -27,6 +27,9 @@ TARGET	= k
 OBJS	= \
 	  crt0.o \
 	  gdt.o \
+	  idt.o \
+	  interrupt_handler.o \
+	  isr.o \
 	  k.o \
 	  libvga.o \
 	  list.o \

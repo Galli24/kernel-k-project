@@ -1,0 +1,16 @@
+{
+    "files.exclude": {
+        "**/*.o": true,
+        "**/*.d": true,
+        "**/*.a": true,
+        "k/k": true,
+        "**/iso": true,
+        "**/k.iso": true,
+        "**/hunter": true,
+        "**/pong": true,
+        "**/vaders": true,
+        "**/perrod": true,
+        "roms/skate/skate": true,
+        "roms/yakanoid/yakanoid": true
+    }
+}

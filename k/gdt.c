@@ -4,7 +4,7 @@
 
 static gdt_entry_t gdt[6];
 
-void print_entry(size_t index)
+void print_gdt_entry(size_t index)
 {
     printf("GDT ENTRY %u\r\n", index);
     printf("LIMIT: %x\r\n", gdt[index].limit);
@@ -15,7 +15,7 @@ void print_entry(size_t index)
     printf("BASE_3: %x\r\n\r\n", gdt[index].base_3);
 }
 
-void set_entry(size_t index, u32 base, u32 limit, u8 access, u8 flags)
+void set_gdt_entry(size_t index, u32 base, u32 limit, u8 access, u8 flags)
 {
     gdt[index].base_1       = (u16)base;
     gdt[index].base_2       = (u8)(base >> 16);
@@ -28,24 +28,24 @@ void set_entry(size_t index, u32 base, u32 limit, u8 access, u8 flags)
 void gdt_init()
 {
     // NULL Entry
-    set_entry(0, 0, 0, 0, 0);
+    set_gdt_entry(0, 0, 0, 0, 0);
 
     // Kernel Code
-    set_entry(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
+    set_gdt_entry(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
     // Kernel Data
-    set_entry(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+    set_gdt_entry(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
     // User Code
-    set_entry(3, 0, 0, 0, 0);
+    set_gdt_entry(3, 0, 0, 0, 0);
     // User Data
-    set_entry(4, 0, 0, 0, 0);
+    set_gdt_entry(4, 0, 0, 0, 0);
 
     // TSS
-    set_entry(5, 0, 0, 0, 0);
+    set_gdt_entry(5, 0, 0, 0, 0);
 
     size_t i = 0;
     while (i < 6)
-        print_entry(i++);
+        print_gdt_entry(i++);
 
     gdtr_t gdtr;
     gdtr.base = (u32)gdt;
