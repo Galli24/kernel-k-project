@@ -10,12 +10,12 @@ void print_idt_entry(size_t index)
     printf("IDT ENTRY %u\r\n", index);
 }
 
-void set_idt_entry(size_t index, u32 offset, u16 selector, u8 type, u8 attributes)
+void set_idt_entry(size_t index, u32 offset, u16 selector, u8 flags)
 {
     idt[index].offset_1 = (u16)offset;
     idt[index].selector = selector;
     idt[index].zero = 0;
-    idt[index].type_attributes = type | attributes;
+    idt[index].type_attributes = flags | 0x60;
     idt[index].offset_2 = (u16)(offset >> 16);
 }
 

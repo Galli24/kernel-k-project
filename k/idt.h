@@ -6,12 +6,6 @@
 
 #define IDT_ENTRY_COUNT 256
 
-enum entry_type {
-    TASK    = 0x5,
-    INT     = 0xE,
-    TRAP    = 0xF
-};
-
 struct idt_entry {
     u16 offset_1;
     u16 selector;
@@ -27,7 +21,7 @@ struct idtr {
 } __packed;
 typedef struct idtr idtr_t;
 
-void set_idt_entry(size_t index, u32 offset, u16 selector, u8 type, u8 attributes);
+void set_idt_entry(size_t index, u32 offset, u16 selector, u8 flags);
 void idt_init();
 
 #endif /* !IDT_H_ */

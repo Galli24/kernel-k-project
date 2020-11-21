@@ -1,60 +1,52 @@
 #include "isr.h"
 
+.altmacro
+
 .macro ISR_NO_ERROR nb
 .align ISR_ALIGN
-    pushl $0
-    pushl %eax
-    movl $\nb, %eax
-    jmp isr_common
+    .global _isr\nb
+    _isr\nb:
+        push $0
+        push $\nb
+        jmp isr_common
 .endm
 
 .macro ISR_ERROR nb
 .align ISR_ALIGN
-    pushl %eax
-    movl $\nb, %eax
-    jmp isr_common
+    .global _isr\nb
+    _isr\nb:
+        push $\nb
+        jmp isr_common
 .endm
 
 isr_common:
-    pushl %ebx
+    pusha
 
-    pushw %ds
-    pushw %es
-    pushw %fs
-    pushw %gs
-    movl $0x10, %ebx
-    movw %bx, %es
-    movw %bx, %ds
+    push %ds
+    push %es
+    push %fs
+    push %gs
+    mov $0x10, %ax
+    mov %ax, %ds
+    mov %ax, %es
+    mov %ax, %fs
+    mov %ax, %gs
+    cld
 
-    pushl %ecx
-    pushl %edx
-    pushl %edi
-    pushl %esi
-
-    pushl %eax
-    
-    pushl %esp
+    push %esp
     call generic_c_handler
     addl $4, %esp
 
-    popl %esi
-    popl %edi
-    popl %edx
-    popl %ecx
+    pop %gs
+    pop %fs
+    pop %es
+    pop %ds
 
-    popw %ds
-    popw %es
-    popw %fs
-    popw %gs
+    popa
 
-    popl %ebx
-    popl %eax
     addl $8, %esp
     iret
 
-.align ISR_ALIGN
-.global isr_vector
-isr_vector: 
 ISR_NO_ERROR 0
 ISR_NO_ERROR 1
 ISR_NO_ERROR 2
@@ -75,8 +67,8 @@ ISR_NO_ERROR 16
 ISR_ERROR 17
 
 #define FIRST_UNUSED_ISR 18
-isr=FIRST_UNUSED_ISR
+.set isr, FIRST_UNUSED_ISR
 .rept (ISR_COUNT - FIRST_UNUSED_ISR)
-    ISR_NO_ERROR isr
-    isr=isr+1
+    ISR_NO_ERROR %isr
+    .set isr, isr + 1
 .endr
