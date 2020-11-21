@@ -26,6 +26,7 @@
 
 #include "gdt.h"
 #include "idt.h"
+#include "isrs.h"
 #include "multiboot.h"
 #include "serial.h"
 
@@ -46,6 +47,11 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
 	idt_init();
 	printf("IDT initialized\r\n");
+
+	isrs_init();
+	printf("ISRS intialzied\r\n");
+
+	asm volatile("int $0x03");
 
 	for (unsigned i = 0; ; ) {
 		*fb = star[i++ % 4];

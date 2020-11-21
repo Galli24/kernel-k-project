@@ -35,7 +35,7 @@ isr_common:
     
     pushl %esp
     call generic_c_handler
-    add $4, %esp
+    addl $4, %esp
 
     popl %esi
     popl %edi

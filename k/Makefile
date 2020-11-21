@@ -28,8 +28,8 @@ OBJS	= \
 	  crt0.o \
 	  gdt.o \
 	  idt.o \
-	  interrupt_handler.o \
 	  isr.o \
+	  isrs.o \
 	  k.o \
 	  libvga.o \
 	  list.o \

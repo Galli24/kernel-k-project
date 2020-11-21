@@ -27,6 +27,7 @@ struct idtr {
 } __packed;
 typedef struct idtr idtr_t;
 
+void set_idt_entry(size_t index, u32 offset, u16 selector, u8 type, u8 attributes);
 void idt_init();
 
 #endif /* !IDT_H_ */
