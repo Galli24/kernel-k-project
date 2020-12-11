@@ -3,6 +3,9 @@
 
 #include "sys.h"
 
+#define RESUME_INT asm volatile("sti");
+#define STOP_INT asm volatile("cli");
+
 // PIC
 
 #define PIC_MASTER          0x20
