@@ -26,15 +26,15 @@ include ../config.mk
 TARGET	= k
 OBJS	= \
 	  crt0.o \
-	  gdt.o \
-	  idt.o \
+	  cpu/gdt.o \
+	  cpu/idt.o \
 	  isr.o \
-	  isrs.o \
+	  cpu/isr.o \
 	  k.o \
 	  libvga.o \
 	  list.o \
 	  memory.o \
-	  serial.o \
+	  drivers/serial.o \
 	  write.o \
 
 

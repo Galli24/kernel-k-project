@@ -24,11 +24,11 @@
 #include <k/kstd.h>
 #include <stdio.h>
 
-#include "gdt.h"
-#include "idt.h"
-#include "isrs.h"
 #include "multiboot.h"
-#include "serial.h"
+#include "cpu/gdt.h"
+#include "cpu/idt.h"
+#include "cpu/isr.h"
+#include "drivers/serial.h"
 
 
 void k_main(unsigned long magic, multiboot_info_t *info)
@@ -49,7 +49,7 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 	printf("IDT initialized\r\n");
 
 	isrs_init();
-	printf("ISRS intialzied\r\n");
+	printf("ISRS intialized\r\n");
 
 	asm volatile("int $0");
 	asm volatile("int $1");

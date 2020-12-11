@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "idt.h"
-#include "isrs.h"
+#include "isr.h"
 
 #define ISR_COUNT   32
 #define SYSCALL_ISR 127

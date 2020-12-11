@@ -1,6 +1,6 @@
 #include <k/types.h>
 
-#include "serial.h"
+#include "drivers/serial.h"
 
 int write(const char *s, size_t nb)
 {
