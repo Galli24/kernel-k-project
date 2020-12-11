@@ -3,8 +3,10 @@
 
 #include "sys.h"
 
-#define RESUME_INT asm volatile("sti");
-#define STOP_INT asm volatile("cli");
+#define IRQ_COUNT           16
+
+#define RESUME_INT          asm volatile("sti");
+#define STOP_INT            asm volatile("cli");
 
 // PIC
 
@@ -40,9 +42,16 @@
 #define ICW4_BUF_MASTER     0x0C        /* Buffered mode/master */
 #define ICW4_SFNM           0x10        /* Special fully nested (not) */
 
+// Typedefs
+
+typedef void (*irq_handler_t) (regs_t *regs);
+
 // Functions
 
 void irq_init();
+void irq_install_handler(u8 irq, irq_handler_t handler);
+void irq_uninstall_handler(u8 irq);
+void irq_ack(u8 irq);
 void irq_handler(regs_t *regs);
 
 #endif /* !IRQ_H_ */

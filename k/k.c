@@ -30,7 +30,7 @@
 #include "cpu/isr.h"
 #include "cpu/irq.h"
 #include "drivers/serial.h"
-
+#include "drivers/keyboard.h"
 
 void k_main(unsigned long magic, multiboot_info_t *info)
 {
@@ -54,6 +54,9 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 
 	irq_init();
 	printf("IRQs initialized\r\n");
+
+	keyboard_install();
+	printf("Keyboard initialized\r\n");
 
 	asm volatile("int $0");
 

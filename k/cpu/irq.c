@@ -28,6 +28,8 @@ EXTERN(15)
 
 #define HANDLER(x) (unsigned)_irq##x
 
+static irq_handler_t irq_handlers[IRQ_COUNT] = { NULL };
+
 void PIC_remap()
 {
     // Init in cascade mode
@@ -55,7 +57,7 @@ void PIC_remap()
     PIC_WAIT();
 }
 
-void mask_irq(u8 irq, u8 should_mask)
+void irq_mask(u8 irq, u8 should_mask)
 {
     u16 pic;
     u8 value;
@@ -74,7 +76,7 @@ void mask_irq(u8 irq, u8 should_mask)
     outb(pic, value);
 }
 
-void PIC_send_EOI(u8 irq)
+void irq_ack(u8 irq)
 {
     if (irq >= 8)
         outb(PIC_SLAVE_COMMAND, PIC_EOI);
@@ -102,23 +104,39 @@ void irq_init()
     set_idt_entry(IRQ_NB_TO_BYTE(14), HANDLER(14), 0x08, 0x8E);
     set_idt_entry(IRQ_NB_TO_BYTE(15), HANDLER(15), 0x08, 0x8E);
 
-    mask_irq(0, 1);
-    mask_irq(1, 0);
-    mask_irq(2, 1);
-    mask_irq(3, 1);
-    mask_irq(4, 1);
-    mask_irq(5, 1);
-    mask_irq(6, 1);
-    mask_irq(7, 1);
-    mask_irq(8, 1);
-    mask_irq(9, 1);
-    mask_irq(10, 1);
-    mask_irq(11, 1);
-    mask_irq(12, 1);
-    mask_irq(13, 1);
-    mask_irq(14, 1);
-    mask_irq(15, 1);
+    irq_mask(0, 1);
+    irq_mask(1, 1);
+    irq_mask(2, 1);
+    irq_mask(3, 1);
+    irq_mask(4, 1);
+    irq_mask(5, 1);
+    irq_mask(6, 1);
+    irq_mask(7, 1);
+    irq_mask(8, 1);
+    irq_mask(9, 1);
+    irq_mask(10, 1);
+    irq_mask(11, 1);
+    irq_mask(12, 1);
+    irq_mask(13, 1);
+    irq_mask(14, 1);
+    irq_mask(15, 1);
 
+    RESUME_INT;
+}
+
+void irq_install_handler(u8 irq, irq_handler_t handler)
+{
+    STOP_INT;
+    irq_handlers[irq] = handler;
+    irq_mask(irq, 0);
+    RESUME_INT;
+}
+
+void irq_uninstall_handler(u8 irq)
+{
+    STOP_INT;
+    irq_mask(irq, 1);
+    irq_handlers[irq] = NULL;
     RESUME_INT;
 }
 
@@ -126,6 +144,9 @@ void irq_handler(regs_t *regs)
 {
     STOP_INT;
     printf("Received IRQ nb: %d\r\n", regs->int_no - 32);
-    PIC_send_EOI(regs->int_no - 32);
+    irq_handler_t handler = irq_handlers[regs->int_no - 32];
+    if (handler)
+        handler(regs);
+    irq_ack(regs->int_no - 32);
     RESUME_INT;
 }

@@ -37,6 +37,7 @@ OBJS	= \
 	  list.o \
 	  memory.o \
 	  drivers/serial.o \
+	  drivers/keyboard.o \
 	  write.o \
 
 
