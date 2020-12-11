@@ -6,5 +6,6 @@
 #define KEY_IRQ            1
 
 void keyboard_install();
+int getkey();
 
 #endif /* !KEYBOARD_H_ */
