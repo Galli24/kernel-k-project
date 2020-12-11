@@ -28,8 +28,10 @@ OBJS	= \
 	  crt0.o \
 	  cpu/gdt.o \
 	  cpu/idt.o \
-	  isr.o \
 	  cpu/isr.o \
+	  cpu/irq.o \
+	  isr.o \
+	  irq.o \
 	  k.o \
 	  libvga.o \
 	  list.o \

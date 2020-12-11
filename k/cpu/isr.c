@@ -82,7 +82,7 @@ void isrs_init()
     set_idt_entry(SYSCALL_ISR, HANDLER(127), 0x08, 0x8E);
 }
 
-void generic_c_handler(regs_t *regs)
+void isr_handler(regs_t *regs)
 {
-    printf("Received interrupt nb: %d\r\n", regs->int_no);
+    printf("Received ISR nb: %d\r\n", regs->int_no);
 }

@@ -28,6 +28,7 @@
 #include "cpu/gdt.h"
 #include "cpu/idt.h"
 #include "cpu/isr.h"
+#include "cpu/irq.h"
 #include "drivers/serial.h"
 
 
@@ -49,7 +50,10 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 	printf("IDT initialized\r\n");
 
 	isrs_init();
-	printf("ISRS intialized\r\n");
+	printf("ISRs intialized\r\n");
+
+	//irq_init();
+	printf("IRQs initialized\r\n");
 
 	asm volatile("int $0");
 	asm volatile("int $1");

@@ -1,5 +1,4 @@
 #define ISR_ALIGN 16
-#define ISR_COUNT 256
 
 .altmacro
 
@@ -7,6 +6,7 @@
 .align ISR_ALIGN
     .global _isr\nb
     _isr\nb:
+        cli
         push $0
         push $\nb
         jmp isr_common
@@ -16,6 +16,7 @@
 .align ISR_ALIGN
     .global _isr\nb
     _isr\nb:
+        cli
         push $\nb
         jmp isr_common
 .endm
@@ -35,7 +36,7 @@ isr_common:
     cld
 
     push %esp
-    call generic_c_handler
+    call isr_handler
     addl $4, %esp
 
     pop %gs
@@ -66,10 +67,18 @@ ISR_ERROR 14
 ISR_ERROR 15
 ISR_NO_ERROR 16
 ISR_ERROR 17
-
-#define FIRST_UNUSED_ISR 18
-.set isr, FIRST_UNUSED_ISR
-.rept (ISR_COUNT - FIRST_UNUSED_ISR)
-    ISR_NO_ERROR %isr
-    .set isr, isr + 1
-.endr
+ISR_NO_ERROR 18
+ISR_NO_ERROR 19
+ISR_NO_ERROR 20
+ISR_NO_ERROR 21
+ISR_NO_ERROR 22
+ISR_NO_ERROR 23
+ISR_NO_ERROR 24
+ISR_NO_ERROR 25
+ISR_NO_ERROR 26
+ISR_NO_ERROR 27
+ISR_NO_ERROR 28
+ISR_NO_ERROR 29
+ISR_NO_ERROR 30
+ISR_NO_ERROR 31
+ISR_NO_ERROR 127
