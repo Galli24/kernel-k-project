@@ -143,7 +143,7 @@ void irq_uninstall_handler(u8 irq)
 void irq_handler(regs_t *regs)
 {
     STOP_INT;
-    printf("Received IRQ nb: %d\r\n", regs->int_no - 32);
+    //printf("Received IRQ nb: %d\r\n", regs->int_no - 32);
     irq_handler_t handler = irq_handlers[regs->int_no - 32];
     if (handler)
         handler(regs);

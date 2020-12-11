@@ -30,6 +30,7 @@
 #include "cpu/isr.h"
 #include "cpu/irq.h"
 #include "drivers/serial.h"
+#include "drivers/timer.h"
 #include "drivers/keyboard.h"
 
 void k_main(unsigned long magic, multiboot_info_t *info)
@@ -55,13 +56,23 @@ void k_main(unsigned long magic, multiboot_info_t *info)
 	irq_init();
 	printf("IRQs initialized\r\n");
 
+	timer_install();
+	printf("Timer initialized\r\n");
+
 	keyboard_install();
 	printf("Keyboard initialized\r\n");
 
 	asm volatile("int $0");
 
+	unsigned long last_value = 0;
+
 	for (unsigned i = 0; ; ) {
 		*fb = star[i++ % 4];
+		unsigned long value = gettick();
+		if (value != last_value) {
+			last_value = value;
+			printf("GETTICK %lums\r\n", value);
+		}
 	}
 
 	for (;;)
